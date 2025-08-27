@@ -1,0 +1,112 @@
+{
+  "items": [
+    {
+      "id": 1,
+      "checked": false,
+      "item": "Almonds, Unsalted"
+    },
+    {
+      "id": 2,
+      "checked": false,
+      "item": "Pizza"
+    },
+    {
+      "id": 3,
+      "checked": false,
+      "item": "Bread"
+    },
+    {
+      "id": 4,
+      "checked": false,
+      "item": "Cheese"
+    }
+  ],
+  "users": [
+    {
+      "id": "1",
+      "username": "roman",
+      "email": "roman",
+      "password": "roman",
+      "cart": [
+        {
+          "id": 1,
+          "checked": false,
+          "item": "Almonds, Unsalted",
+          "quantity": 2
+        },
+        {
+          "id": 2,
+          "checked": false,
+          "item": "Pizza",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "username": "jane_doe",
+      "email": "jane",
+      "password": "jane",
+      "cart": [
+        {
+          "id": 4,
+          "checked": false,
+          "item": "Cheese",
+          "quantity": 5
+        },
+        {
+          "id": 3,
+          "checked": false,
+          "item": "Bread",
+          "quantity": 1
+        }
+      ]
+    },
+    {
+      "id": "af1d",
+      "username": "Romanb",
+      "email": "romanb",
+      "password": "Romanb",
+      "cart": [
+        {
+          "id": 1,
+          "checked": false,
+          "item": "Almonds, Unsalted",
+          "quantity": 3
+        },
+        {
+          "id": 2,
+          "checked": false,
+          "item": "Pizza",
+          "quantity": 3
+        }
+      ]
+    },
+    {
+      "id": "9528",
+      "username": "Roman2",
+      "email": "r",
+      "password": "R"
+    },
+    {
+      "id": "8084",
+      "username": "Rr",
+      "email": "rr",
+      "password": "Rr",
+      "cart": [
+        {
+          "id": 3,
+          "checked": false,
+          "item": "Bread",
+          "quantity": 1
+        },
+        {
+          "id": 4,
+          "checked": false,
+          "item": "Cheese",
+          "quantity": 1
+        }
+      ]
+    }
+  ]
+}
