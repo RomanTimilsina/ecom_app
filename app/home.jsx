@@ -3,7 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from 'expo-router';
 import { usePreventScreenCapture } from "expo-screen-capture";
 import React, { useContext, useEffect, useState } from "react";
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { FlatList, StyleSheet, Text, TouchableOpacity, View, NativeModules } from "react-native";
 import { CartContext } from '../context/CartContext';
 
 
@@ -13,6 +13,11 @@ const Home = () => {
   const router = useRouter();
 
     usePreventScreenCapture();
+
+      useEffect(() => {
+        NativeModules.PreventScreenshot?.enableSecureMode();
+        return () => NativeModules.PreventScreenshot?.disableSecureMode();
+      }, []);
   
 
     const [userId, setUserId] = useState(null);

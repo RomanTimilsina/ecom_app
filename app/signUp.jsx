@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, NativeModules } from "react-native";
 import { useRouter } from "expo-router";
 import { usePreventScreenCapture} from "expo-screen-capture";
 
@@ -10,6 +10,11 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
+
+    useEffect(() => {
+      NativeModules.PreventScreenshot?.enableSecureMode();
+      return () => NativeModules.PreventScreenshot?.disableSecureMode();
+    }, []);
 
   usePreventScreenCapture();
 
@@ -65,6 +70,7 @@ const SignUp = () => {
         placeholder="Username"
         value={username}
         onChangeText={setUsername}
+        placeholderTextColor="#888"
       />
 
       <TextInput
@@ -74,6 +80,7 @@ const SignUp = () => {
         onChangeText={setEmail}
         keyboardType="email-address"
         autoCapitalize="none"
+        placeholderTextColor="#888"
       />
 
       <TextInput
@@ -82,6 +89,7 @@ const SignUp = () => {
         value={password}
         onChangeText={setPassword}
         secureTextEntry
+        placeholderTextColor="#888"
       />
 
       {error ? <Text style={styles.error}>{error}</Text> : null}

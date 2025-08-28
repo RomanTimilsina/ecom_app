@@ -7,7 +7,8 @@ import {
   Pressable, 
   Alert, 
   BackHandler ,
-   Platform
+   Platform,
+   NativeModules
 } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
 import { Link, useRouter } from "expo-router";
@@ -15,7 +16,7 @@ import * as FileSystem from "expo-file-system";
 import { usePreventScreenCapture} from "expo-screen-capture";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CartContext } from '../context/CartContext';
-// import JailMonkey from 'jail-monkey'
+import JailMonkey from 'jail-monkey'
 
 
 
@@ -29,6 +30,11 @@ const Login = () => {
   const router = useRouter();
 
   usePreventScreenCapture();
+
+  useEffect(() => {
+    NativeModules.PreventScreenshot?.enableSecureMode();
+    return () => NativeModules.PreventScreenshot?.disableSecureMode();
+  }, []);
 
   // ✅ jailbreak/root detection
   const isRootedOrJailbroken = async () => {
@@ -71,7 +77,16 @@ const Login = () => {
 
   // }, []);
 
-//   if (JailMonkey.AdbEnabled	()) {
+
+
+//   const checkDeveloperMode = async () => {
+//     if (__DEV__) {
+//       // Alert.alert("Security Alert", "Developer mode is enabled. Closing app.");
+//       // BackHandler.exitApp();
+//
+//     }
+//
+//   if (JailMonkey.isDeveloperMode()) {
 //     console.log("adbenabled")
 //     Alert.alert("developer options enabled")
 //     // Alternative behaviour for jail-broken/rooted devices.
@@ -79,14 +94,25 @@ const Login = () => {
 //     console.log("disabled")
 //         Alert.alert("developer options disabled")
 //   }
+//   };
 
-  const checkDeveloperMode = async () => {
-    if (__DEV__) {
-      // Alert.alert("Security Alert", "Developer mode is enabled. Closing app.");
-      // BackHandler.exitApp();
-
+const checkDeveloperMode = async () => {
+  try {
+    const devModeEnabled = await JailMonkey.isDevelopmentSettingsMode(); // ✅ await the promise
+    if (devModeEnabled) {
+      console.log("Developer options enabled");
+      Alert.alert(
+        "Security Alert",
+        "Developer options are enabled. The app cannot run."
+      );
+      BackHandler.exitApp(); // Close app if developer mode is on
+    } else {
+      console.log("Developer options disabled");
     }
-  };
+  } catch (error) {
+    console.error("Error checking developer mode:", error);
+  }
+};
 
   useEffect(() =>{ checkDeveloperMode()}, [])
 
@@ -98,7 +124,7 @@ const Login = () => {
         Alert.alert("Security Alert", "This device is rooted/jailbroken. Closing app.");
         BackHandler.exitApp();
       }
-      checkDeveloperMode();
+      await checkDeveloperMode();
     })();
   }, []);
 
@@ -155,6 +181,7 @@ const Login = () => {
         onChangeText={setEmail}
         keyboardType="email-address"
         autoCapitalize="none"
+        placeholderTextColor="#888"
       />
 
       <TextInput
@@ -163,6 +190,7 @@ const Login = () => {
         value={password}
         onChangeText={setPassword}
         secureTextEntry
+        placeholderTextColor="#888"
       />
 
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
