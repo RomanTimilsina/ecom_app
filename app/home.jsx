@@ -1,10 +1,10 @@
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from "react-native";
-import React, { useEffect, useState, useContext } from "react";
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
-import { CartContext } from '../context/CartContext';
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { usePreventScreenCapture} from "expo-screen-capture";
+import { useRouter } from 'expo-router';
+import { usePreventScreenCapture } from "expo-screen-capture";
+import React, { useContext, useEffect, useState } from "react";
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { CartContext } from '../context/CartContext';
 
 
 const Home = () => {
@@ -15,33 +15,36 @@ const Home = () => {
     usePreventScreenCapture();
   
 
-  useEffect(() => {
-    const loadUserData = async () => {
-      try {
-        const userId = await AsyncStorage.getItem("userId");
-        if (!userId) return;
+    const [userId, setUserId] = useState(null);
 
-        // fetch user with his cart
-        const res = await fetch(`http://192.168.1.65:3000/users/${userId}`);
-        const user = await res.json();
-        console.log("User loaded:", user);
-
-        // ✅ set items (global list)
-        const itemsRes = await fetch(`http://192.168.1.65:3000/items`);
-        const allItems = await itemsRes.json();
-        setItems(allItems || []);
-
-        // ✅ load cart into CartContext
-        if (user.cart) {
-          setCart(user.cart);
+    useEffect(() => {
+      const loadUserData = async () => {
+        try {
+          const storedUserId = await AsyncStorage.getItem("userId");
+          if (!storedUserId) return;
+          setUserId(storedUserId);
+    
+          // fetch user with his cart
+          const res = await fetch(`http://192.168.1.65:3000/users/${storedUserId}`);
+          const user = await res.json();
+          console.log("User loaded:", user);
+    
+          // load all items
+          const itemsRes = await fetch(`http://192.168.1.65:3000/items`);
+          const allItems = await itemsRes.json();
+          setItems(allItems || []);
+    
+          // load cart into CartContext
+          if (user.cart) {
+            setCart(user.cart);
+          }
+        } catch (err) {
+          console.error("Error loading user/cart data:", err);
         }
-      } catch (err) {
-        console.error("Error loading user/cart data:", err);
-      }
-    };
-
-    loadUserData();
-  }, []);
+      };
+    
+      loadUserData();
+    }, []);
 
   
 
@@ -74,7 +77,7 @@ const Home = () => {
             <Text style={styles.item}>{item.item}</Text>
             <TouchableOpacity 
               style={styles.button} 
-              onPress={() => addToCart(item)} 
+              onPress={() => addToCart(item, userId)} 
             >
               <Text style={styles.buttonText}>Add to Cart</Text>
             </TouchableOpacity>

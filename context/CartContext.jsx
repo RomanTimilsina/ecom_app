@@ -7,29 +7,51 @@ export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
 
   const addToCart = async (item, userId) => {
-    const existingItem = cart.find((i) => i.id === item.id);
-    let updatedCart;
+    const normalizedId = String(item.id); // make sure ID is always a string
   
+    const existingItem = cart.find((i) => String(i.id) === normalizedId);
+  
+    let updatedCart;
     if (existingItem) {
+      // increase quantity if already in cart
       updatedCart = cart.map((i) =>
-        i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
+        String(i.id) === normalizedId
+          ? { ...i, quantity: i.quantity + 1 }
+          : i
       );
     } else {
-      updatedCart = [...cart, { ...item, quantity: 1 }];
+      // add new item with quantity = 1
+      updatedCart = [...cart, { ...item, id: normalizedId, quantity: 1 }];
     }
   
     setCart(updatedCart);
   
-    // 🔥 sync with backend
-    await fetch(`http://192.168.1.65:3000/users/${userId}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ cart: updatedCart }),
-    }).catch((err) => console.error("Error updating cart:", err));
+    // sync with backend
+    try {
+      await fetch(`http://192.168.1.65:3000/users/${userId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cart: updatedCart }),
+      });
+    } catch (err) {
+      console.error("Error updating cart:", err);
+    }
   };
+  
 
-  const removeFromCart = (itemId) => {
-    setCart(cart.filter((i) => i.id !== itemId));
+  const removeFromCart = async (itemId, userId) => {
+    const updatedCart = cart.filter((i) => i.id !== itemId);
+    setCart(updatedCart);
+  
+    try {
+      await fetch(`http://192.168.1.65:3000/users/${userId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cart: updatedCart }),
+      });
+    } catch (err) {
+      console.error("Error syncing cart after removal:", err);
+    }
   };
 
   const updateQuantity = async (itemId, amount, userId) => {
@@ -40,7 +62,7 @@ export const CartProvider = ({ children }) => {
           : i
       );
   
-      // 🔥 persist to backend
+      //  persist to backend
       fetch(`http://192.168.1.65:3000/users/${userId}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },

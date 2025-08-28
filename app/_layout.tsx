@@ -27,7 +27,7 @@ export default function RootLayout() {
         <Stack.Screen name="signUp" options={{ headerShown: false }} />
         <Stack.Screen name="home" options={{ headerShown: false }} />
 
-        <Stack.Screen name="+not-found" />
+      {/* <Stack.Screen name="+not-found" />*/}
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>

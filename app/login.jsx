@@ -71,13 +71,14 @@ const Login = () => {
 
   // }, []);
 
-  // if (JailMonkey.AdbEnabled	()) {
-  //   console.log("adbenabled")
-  //   // Alternative behaviour for jail-broken/rooted devices.
-  // } else {
-  //   console.log("disabled")
-
-  // }
+//   if (JailMonkey.AdbEnabled	()) {
+//     console.log("adbenabled")
+//     Alert.alert("developer options enabled")
+//     // Alternative behaviour for jail-broken/rooted devices.
+//   } else {
+//     console.log("disabled")
+//         Alert.alert("developer options disabled")
+//   }
 
   const checkDeveloperMode = async () => {
     if (__DEV__) {

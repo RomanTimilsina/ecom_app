@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from "react-native";
-import { CartContext } from "../context/CartContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { usePreventScreenCapture} from "expo-screen-capture";
+import { usePreventScreenCapture } from "expo-screen-capture";
+import React, { useContext } from "react";
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { CartContext } from "../context/CartContext";
 
 
 const Cart = () => {
