@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, NativeModules } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, NativeModules, useEffect } from "react-native";
 import { useRouter } from "expo-router";
 import { usePreventScreenCapture} from "expo-screen-capture";
 
